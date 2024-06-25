@@ -16,9 +16,11 @@ export const App = () => {
   // Load contacts from local storage when the component mounts
   useEffect(() => {
     const savedContacts = localStorage.getItem('contacts');
+    console.log('Loaded contacts:', savedContacts);
     if (savedContacts) {
       setContacts(JSON.parse(savedContacts));
     } else {
+      console.log('Setting initial contacts:', initialContacts);
       setContacts(initialContacts);
     }
     console.log('componentDidMount equivalent');
@@ -26,10 +28,8 @@ export const App = () => {
 
   // Save contacts to local storage whenever the contacts state changes
   useEffect(() => {
-    if (contacts !== initialContacts) {
       localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
-    console.log('componentDidUpdate equivalent');
+      console.log('componentDidUpdate equivalent');
   }, [contacts]); 
 
 const addContact = newContact => {

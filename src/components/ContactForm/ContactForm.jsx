@@ -1,49 +1,38 @@
-import { Component } from 'react';
+import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css';
 import PropTypes from 'prop-types';
 
-export class ContactForm extends Component {
-  static propTypes = {
-    addContact: PropTypes.func.isRequired,
-    contacts: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        number: PropTypes.string.isRequired,
-      })
-    ),
-  };
+export const ContactForm = ({ addContact, contacts }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  state = {
-    name: '',
-    number: '',
-  };
-
-  resetForm = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
+const resetForm = () => {
+    setName('');
+    setNumber('');
   };
     
-  handleChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+const handleChange = e => {
+        const { name, value } = e.target;
+        if (name === 'name') {
+          setName(value);
+        } else if (name === 'number') {
+          setNumber(value);
+        }
       };
-
-      handleSubmit = e => {
+      
+const handleSubmit = e => {
         e.preventDefault();
-        const { name, number } = this.state;
-        const { addContact, contacts } = this.props;
-
+        
         if (name.trim() === '' || number.trim() === '') {
           return;
         }
-
+        
         // if it is an existing contact, alert
         const existingContact = contacts.find(
           contact => contact.name.toLowerCase() === name.toLowerCase()
         );
+
         if (existingContact) {
           alert(`${name} is already in contacts!`);
           return;
@@ -55,16 +44,13 @@ export class ContactForm extends Component {
           name: name.trim(),
           number: number.trim(),
         });
-
+        
         // Reset Form fields upon submission
-        this.resetForm();
+        resetForm();
       };
-    
-    render() {
-      const { name, number } = this.state;
       
       return (
-        <form className={css.form} onSubmit={this.handleSubmit}>
+        <form className={css.form} onSubmit={handleSubmit}>
           <label className={css.label}>
               <p className={css.labelText}>Name</p>
               <input
@@ -75,8 +61,8 @@ export class ContactForm extends Component {
                 title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan."
                 required
                 value={name}
-                onChange={this.handleChange}
-              />
+                onChange={handleChange}
+                />
             </label>
 
             <label className={css.label}>
@@ -89,11 +75,21 @@ export class ContactForm extends Component {
                 title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
                 required
                 value={number}
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </label>
           <button className={css.button} type="submit">Add Contact</button>
         </form>    
         );
-    }
-}
+      }
+
+    ContactForm.propTypes = {
+        addContact: PropTypes.func.isRequired,
+        contacts: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            number: PropTypes.string.isRequired,
+          })
+        ),
+      };
