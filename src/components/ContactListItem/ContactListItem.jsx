@@ -20,8 +20,8 @@ export const ContactListItem = ({ contact, onDelete }) => {
        Delete
      </button>
    </li>
-     );
-   };
+  );
+};
     
 ContactListItem.propTypes = {
     contact: PropTypes.shape({
